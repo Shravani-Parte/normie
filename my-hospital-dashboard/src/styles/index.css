@@ -324,7 +324,7 @@ body {
   }
 
   .dashboard-btn--ghost {
-    @apply border border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white;
+    @apply border border-grey-200 bg-white text-primary-500 hover:bg-grey-50;
   }
 
   .dashboard-btn--inline {
