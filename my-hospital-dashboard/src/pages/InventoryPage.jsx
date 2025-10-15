@@ -1,73 +1,205 @@
-import React from 'react';
-import Card from '@/components/ui/Card'; // Corrected Path
+import Card from '@/components/ui/Card';
 import { MOCK_API_DATA } from '@/api/mockData';
+import { Doughnut } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const statusBadge = (ratio) => {
+  if (ratio < 0.25) return { text: 'Critical', tone: 'critical' };
+  if (ratio < 0.75) return { text: 'Deficit', tone: 'warning' };
+  if (ratio < 1.1) return { text: 'Sufficient', tone: 'success' };
+  return { text: 'Surplus', tone: 'accent' };
+};
 
 const InventoryPage = () => {
-    const data = MOCK_API_DATA.inventoryDashboard;
+  const data = MOCK_API_DATA.inventoryDashboard;
+  const deficitItems = data.checklist.filter((item) => item.stock < item.need);
+  const stableItems = data.checklist.length - deficitItems.length;
 
-    const getStatus = (stock, need) => {
-        const ratio = stock / need;
-        if (ratio < 0.25) return { text: 'CRITICAL', className: 'bg-danger-100 text-danger-500' };
-        if (ratio < 0.75) return { text: 'DEFICIT', className: 'bg-warning-100 text-warning-500' };
-        if (ratio < 1.1) return { text: 'SUFFICIENT', className: 'bg-success-100 text-success-500' };
-        return { text: 'SURPLUS', className: 'bg-primary-100 text-primary-700' };
-    };
+  const doughnutData = {
+    labels: ['Critical / Deficit', 'Stable'],
+    datasets: [
+      {
+        label: 'Inventory Health',
+        data: [deficitItems.length, stableItems],
+        backgroundColor: ['#E63946', '#2A9D8F'],
+        borderColor: ['#B22432', '#1E776C'],
+        borderWidth: 2,
+      },
+    ],
+  };
 
-    return (
+  const doughnutOptions = {
+    cutout: '70%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 12,
+          padding: 16,
+          color: '#475569',
+          font: { family: 'Inter', size: 12 },
+        },
+      },
+      tooltip: {
+        backgroundColor: '#023E8A',
+        borderColor: '#00B4D8',
+        borderWidth: 1,
+      },
+    },
+  };
+
+  return (
+    <div className="dashboard-shell">
+      <header className="dashboard-header">
         <div>
-            <header>
-                <h1 className="text-3xl font-bold text-grey-900 mb-2">Inventory Management</h1>
-                <p className="text-grey-600 mb-6">Readiness for: <strong className="text-primary-700">{data.surgeEvent}</strong></p>
-            </header>
-
-            <main>
-                <Card>
-                    <h2 className="text-xl font-semibold text-grey-800 mb-4">Surge Readiness Checklist</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white">
-                            <thead className="bg-grey-100">
-                                <tr>
-                                    <th className="text-left py-3 px-4 font-semibold text-sm text-grey-600 uppercase">Item</th>
-                                    <th className="text-center py-3 px-4 font-semibold text-sm text-grey-600 uppercase">Current Stock</th>
-                                    <th className="text-center py-3 px-4 font-semibold text-sm text-grey-600 uppercase">AI Predicted Need</th>
-                                    <th className="text-center py-3 px-4 font-semibold text-sm text-grey-600 uppercase">Status</th>
-                                    <th className="text-center py-3 px-4 font-semibold text-sm text-grey-600 uppercase">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-grey-700">
-                                {data.checklist.map(item => {
-                                    const status = getStatus(item.stock, item.need);
-                                    const deficit = item.need - item.stock;
-                                    return (
-                                        <tr key={item.item} className="border-b border-grey-200 hover:bg-grey-50">
-                                            <td className="text-left py-4 px-4 font-medium">{item.item}</td>
-                                            <td className="text-center py-4 px-4">{item.stock} units</td>
-                                            <td className="text-center py-4 px-4">{item.need} units</td>
-                                            <td className="text-center py-4 px-4">
-                                                <span className={`px-3 py-1 text-xs font-bold rounded-full ${status.className}`}>
-                                                    {status.text} {deficit > 0 ? `(-${deficit})` : ''}
-                                                </span>
-                                            </td>
-                                            <td className="text-center py-4 px-4">
-                                                {deficit > 0 ? (
-                                                    <button className={`text-white font-bold py-1 px-3 rounded-lg text-sm ${status.text === 'CRITICAL' ? 'bg-danger-500 hover:bg-danger-600' : 'bg-warning-500 hover:bg-warning-600'}`}>
-                                                    Generate PO
-                                                </button>
-                                                ) : (
-                                                    <span className="text-grey-400">-</span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-            </main>
+          <p className="dashboard-eyebrow">Inventory & Supply Intelligence</p>
+          <h1 className="dashboard-title">Inventory Management</h1>
+          <p className="dashboard-subtitle">
+            Surge scenario: <span className="dashboard-highlight">{data.surgeEvent}</span>
+          </p>
         </div>
-    );
+        <div className="dashboard-actions">
+          <button className="dashboard-btn dashboard-btn--ghost">Assign Task</button>
+          <button className="dashboard-btn dashboard-btn--outline">Mark Delivered</button>
+          <button className="dashboard-btn">Create Purchase Order</button>
+        </div>
+      </header>
+
+      <section className="inventory-grid">
+        <Card className="inventory-grid__table">
+          <div className="management-section-header">
+            <div>
+              <p className="management-section-eyebrow">Live Inventory</p>
+              <h2>Surge Readiness Checklist</h2>
+            </div>
+            <div className="management-tags">
+              <span className="management-tag management-tag--accent">Updated just now</span>
+            </div>
+          </div>
+          <div className="inventory-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Current Stock</th>
+                  <th>Predicted Need</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.checklist.map((item) => {
+                  const ratio = item.stock / item.need;
+                  const info = statusBadge(ratio);
+                  const deficit = Math.max(item.need - item.stock, 0);
+                  return (
+                    <tr key={item.item} className={`inventory-row inventory-row--${info.tone}`}>
+                      <td>{item.item}</td>
+                      <td>{item.stock} units</td>
+                      <td>{item.need} units</td>
+                      <td>
+                        <span className={`resource-tag resource-tag--${info.tone}`}>
+                          {info.text}
+                          {deficit > 0 ? ` (−${deficit})` : ''}
+                        </span>
+                      </td>
+                      <td>
+                        {deficit > 0 ? (
+                          <div className="inventory-row__actions">
+                            <button className="dashboard-btn dashboard-btn--inline">Allocate Beds</button>
+                            <button className="dashboard-btn dashboard-btn--outline">Generate PO</button>
+                          </div>
+                        ) : (
+                          <span className="inventory-row__placeholder">Balanced</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <div className="inventory-grid__insights">
+          <Card variant="accent" className="inventory-recommendations">
+            <div className="management-section-header">
+              <div>
+                <p className="management-section-eyebrow">Auto Recommendations</p>
+                <h2>Supply Actions Suggested</h2>
+              </div>
+            </div>
+            <ul className="recommendation-list">
+              {deficitItems.map((item) => (
+                <li key={item.item} className="recommendation-card">
+                  <div className="recommendation-card__badge">Confidence 94%</div>
+                  <div className="recommendation-card__content">
+                    <h3>{item.item}</h3>
+                    <p>
+                      Reorder {item.need - item.stock} units immediately to match predicted load.
+                    </p>
+                  </div>
+                  <div className="recommendation-card__actions">
+                    <button className="dashboard-btn dashboard-btn--ghost">Schedule Delivery</button>
+                    <button className="dashboard-btn dashboard-btn--inline">Approve</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <Card className="inventory-analytics">
+            <div className="management-section-header">
+              <div>
+                <p className="management-section-eyebrow">Supply Health</p>
+                <h2>Critical vs Stable Items</h2>
+              </div>
+            </div>
+            <div className="inventory-chart">
+              <Doughnut data={doughnutData} options={doughnutOptions} />
+              <div className="inventory-chart__label">
+                <span>{deficitItems.length}</span>
+                <p>Items flagged</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="inventory-alerts">
+            <div className="management-section-header">
+              <div>
+                <p className="management-section-eyebrow">Realtime Alerts</p>
+                <h2>Operational Checklist</h2>
+              </div>
+            </div>
+            <ul className="alert-list">
+              <li>
+                <h3>Oxygen refill schedule</h3>
+                <p>Confirm tanker arrival by 20:00. Allocate bay for rapid refill.</p>
+                <button className="dashboard-btn dashboard-btn--inline">Assign Task</button>
+              </li>
+              <li>
+                <h3>N95 distribution</h3>
+                <p>Prioritize ICU and ER wings. Ensure ward supervisors acknowledge receipt.</p>
+                <button className="dashboard-btn dashboard-btn--inline">Acknowledge</button>
+              </li>
+              <li>
+                <h3>Isolation ward prep</h3>
+                <p>Ready negative-pressure rooms and stock antiviral kits.</p>
+                <button className="dashboard-btn dashboard-btn--inline">Mark Ready</button>
+              </li>
+            </ul>
+          </Card>
+        </div>
+      </section>
+    </div>
+  );
 };
 
 export default InventoryPage;
-
