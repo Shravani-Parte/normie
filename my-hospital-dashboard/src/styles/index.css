@@ -251,12 +251,11 @@ body {
   }
 
   .sidebar {
-    @apply fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-primary-700/40 bg-primary-700 px-6 py-8 text-white shadow-2xl transition-transform duration-300 ease-in-out lg:translate-x-0;
-    transform: translateX(-100%);
+    @apply fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-primary-700/40 bg-primary-700 px-6 py-8 text-white shadow-2xl transition-transform duration-300 ease-in-out transform -translate-x-full lg:translate-x-0;
   }
 
   .sidebar--open {
-    transform: translateX(0);
+    @apply translate-x-0;
   }
 
   .sidebar__header {
