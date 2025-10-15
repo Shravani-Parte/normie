@@ -14,15 +14,15 @@ const AppLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <div className="flex min-h-screen bg-grey-50">
+    <div className="app-shell">
       <Sidebar
         isOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
         userRole={userRole}
       />
-      <div className="flex flex-1 flex-col">
+      <div className="app-shell__main">
         <Header toggleSidebar={toggleSidebar} userRole={userRole} />
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+        <main className="app-shell__content">
           <Outlet />
         </main>
         <Footer />
