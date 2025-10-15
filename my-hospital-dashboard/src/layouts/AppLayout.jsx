@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from '@/components/common/Header';
 import Sidebar from '@/components/common/Sidebar';
 import Footer from '@/components/common/Footer';
@@ -10,32 +10,26 @@ const AppLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user } = useAuth();
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  // Define navigation links based on roles
-  const navLinks = [
-    { to: '/app/admin', label: 'Admin Dashboard', allowed: [ROLES.ADMIN] },
-    { to: '/app/doctor', label: 'My Dashboard', allowed: [ROLES.DOCTOR] },
-    { to: '/app/inventory', label: 'Inventory', allowed: [ROLES.INVENTORY] },
-    { to: '/ert-console', label: 'ERT Console', allowed: [ROLES.ERT] },
-  ];
-
-  const availableLinks = navLinks.filter(link => link.allowed.includes(user?.role));
+  const availableRoles = useMemo(() => {
+    if (!user?.role) {
+      return [];
+    }
+    return [user.role];
+  }, [user?.role]);
 
   return (
-    <div className="flex min-h-screen bg-grey-50 font-sans">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        toggleSidebar={toggleSidebar} 
-        links={availableLinks} // Pass links to the sidebar
+    <div className="flex min-h-screen bg-grey-50">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        userRole={availableRoles[0]}
       />
-      <div className="flex-1 flex flex-col">
-        <Header 
-          toggleSidebar={toggleSidebar} 
-          user={user} 
-        />
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
-          <Outlet /> 
+      <div className="flex flex-1 flex-col">
+        <Header toggleSidebar={toggleSidebar} userRole={availableRoles[0]} />
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <Outlet />
         </main>
         <Footer />
       </div>
