@@ -9,8 +9,8 @@ const NotFoundPage = () => {
             <p className="text-grey-600 mt-2 mb-8">
                 Sorry, the page you are looking for does not exist or has been moved.
             </p>
-            <Link 
-                to="/login"
+            <Link
+                to="/auth/login"
                 className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
             >
                 Go to Login Page
