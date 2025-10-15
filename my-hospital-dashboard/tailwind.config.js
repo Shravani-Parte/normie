@@ -9,38 +9,46 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Our custom color palette from before
         primary: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          900: '#1E3A8A',
+          50: '#E0F2FF',
+          100: '#B9E4FF',
+          200: '#89D2FF',
+          500: '#0077B6',
+          600: '#00619B',
+          700: '#023E8A',
+          900: '#012A4A',
+        },
+        accent: {
+          50: '#E0FBFF',
+          100: '#B3F4FF',
+          200: '#7AE8FF',
+          500: '#00B4D8',
+          600: '#0091B5',
+          700: '#007A99',
         },
         grey: {
           50: '#F8FAFC',
-          100: '#F1F5F9',
-          200: '#E2E8F0',
+          100: '#EDF2F7',
+          200: '#D7DEE9',
           400: '#94A3B8',
           600: '#475569',
           800: '#1E293B',
           900: '#0F172A',
         },
         success: {
-          100: '#D1FAE5',
-          500: '#10B981',
-          700: '#047857', // Added for consistency
+          100: '#D9F3EE',
+          500: '#2A9D8F',
+          700: '#1E776C',
         },
         warning: {
-          100: '#FEF3C7',
-          500: '#F59E0B',
-          800: '#92400E', // Added for consistency
+          100: '#FFE8CF',
+          500: '#F4A261',
+          700: '#C4742B',
         },
         danger: {
-          100: '#FEE2E2',
-          500: '#EF4444',
-          700: '#B91C1C', // Added for consistency
+          100: '#FAD4D8',
+          500: '#E63946',
+          700: '#B22432',
         }
       }
     },

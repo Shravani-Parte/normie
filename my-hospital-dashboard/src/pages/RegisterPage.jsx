@@ -1,23 +1,29 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const RegisterPage = () => {
-    // This is a placeholder as registration logic is not part of the core requirements yet.
-    return (
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 text-center">
-             <h1 className="text-3xl font-bold text-grey-900">Registration</h1>
-             <p className="text-grey-600">
-                The registration portal is currently not available. 
-                New user accounts are created by the hospital administration.
-             </p>
-             <Link 
-                to="/login"
-                className="inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg"
-            >
-                Return to Login
-            </Link>
-        </div>
-    );
+  return (
+    <div className="auth-panel">
+      <header className="auth-panel__header">
+        <p className="auth-panel__eyebrow">Access Request</p>
+        <h1 className="auth-panel__title">Registration</h1>
+        <p className="auth-panel__subtitle">
+          The registration portal is currently limited to hospital administrators. Submit a ticket to onboard new staff members.
+        </p>
+      </header>
+      <div className="auth-panel__body">
+        <ul className="auth-panel__list">
+          <li>Provision secure accounts for clinical and operational teams.</li>
+          <li>Enforce role-based controls across admin, doctor, inventory, and ERT units.</li>
+          <li>Track activation status and audit activity in real time.</li>
+        </ul>
+      </div>
+      <footer className="auth-panel__footer">
+        <Link to="/auth/login" className="auth-panel__cta">
+          Return to Login
+        </Link>
+      </footer>
+    </div>
+  );
 };
 
 export default RegisterPage;

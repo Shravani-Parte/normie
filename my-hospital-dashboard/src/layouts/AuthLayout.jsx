@@ -1,10 +1,12 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 const AuthLayout = () => {
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
-      <Outlet />
+    <main className="auth-screen">
+      <div className="auth-screen__overlay" aria-hidden="true" />
+      <div className="auth-screen__content">
+        <Outlet />
+      </div>
     </main>
   );
 };
