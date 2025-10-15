@@ -1,0 +1,30 @@
+/* Always include these three Tailwind directives at the very top of your main CSS file */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* If you are using custom CSS variables (as we initially discussed 
+  before moving to Tailwind's config for custom colors), they would go here.
+  However, with the colors defined in tailwind.config.js, these are less necessary
+  unless you have very specific, non-Tailwind related variables.
+*/
+
+body {
+  /* This ensures your entire app uses the cool grey background from our palette */
+  background-color: var(--grey-50, #F8FAFC); /* Fallback for browsers not supporting custom properties */
+  font-family: 'Inter', sans-serif; /* We'll add Inter font below */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base text color for better readability against the light background */
+* {
+  color: var(--grey-800, #1E293B);
+}
+
+/* Ensure full height for layout containers */
+#root, html, body {
+  height: 100%;
+  margin: 0;
+}
